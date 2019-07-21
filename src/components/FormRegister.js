@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, ImageBackground, Image } from 'react-native'
+import { Actions } from 'react-native-router-flux'
+
 
 export default class FormRegister extends Component {
     render() {
@@ -31,7 +33,9 @@ export default class FormRegister extends Component {
                         />
                         <View style={styles.registerText}>
                             <Text style={styles.registerLink} >Já possui uma conta? </Text>
-                            <Text style={[styles.registerLink, { color: '#25D366' }]} >Acesse aqui</Text>
+                            <TouchableOpacity onPress={() => Actions.login()}>
+                                <Text style={[styles.registerLink, { color: '#25D366' }]} >Acesse aqui</Text>
+                            </TouchableOpacity>
                         </View>
                     </View>
                     <View style={styles.button}>

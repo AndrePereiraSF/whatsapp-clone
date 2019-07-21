@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, ImageBackground, Image } from 'react-native'
+import { Actions } from 'react-native-router-flux'
+
 
 export default class FormLogin extends Component {
     render() {
@@ -26,7 +28,9 @@ export default class FormLogin extends Component {
                         />
                         <View style={styles.registerText}>
                             <Text style={styles.registerLink} >Ainda não tem acesso? </Text>
-                            <Text style={[styles.registerLink, { color: '#25D366' }]} >Cadastre-se</Text>
+                            <TouchableOpacity onPress={() => Actions.register()}>
+                                <Text style={[styles.registerLink, { color: '#25D366' }]} >Cadastre-se</Text>
+                            </TouchableOpacity>
                         </View>
                     </View>
                     <View style={styles.button}>
@@ -63,12 +67,12 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
 
-    
+
     titleText: {
         color: '#ECE5DD',
         fontSize: 25
     },
-    
+
     input: {
         fontSize: 20,
         backgroundColor: '#ECE5DD',
@@ -78,16 +82,16 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         margin: 10
     },
-    
+
     registerLink: {
         color: '#ECE5DD',
         fontSize: 20
     },
-    
+
     registerText: {
         flexDirection: 'row'
     },
-    
+
     touchable: {
         height: 50,
         width: 150,
@@ -97,7 +101,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#128C7E',
         elevation: 0.5
     },
-    
+
     touchableText: {
         color: '#ECE5DD',
         fontSize: 20,
