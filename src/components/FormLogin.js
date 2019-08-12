@@ -1,9 +1,11 @@
 import React, { Component } from 'react'
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, ImageBackground, Image } from 'react-native'
-import { Actions } from 'react-native-router-flux'
+import { connect } from 'react-redux'
 
+import { changeEmail, changePwd } from '../actions/AuthActions'
+import NavigationService from 'whatsappclone/src/services/NavigationService';
 
-export default class FormLogin extends Component {
+class FormLogin extends Component {
     render() {
         return (
             <ImageBackground source={require('../images/wpp_background.jpg')} style={{ width: '100%', height: '100%' }} >
@@ -14,11 +16,15 @@ export default class FormLogin extends Component {
                     </View>
                     <View style={styles.form}>
                         <TextInput
+                            value={this.props.email}
+                            onChangeText={text => this.props.changeEmail(text)}
                             placeholder="E-mail"
                             style={styles.input}
                             placeholderTextColor='#C3C3C3'
                             autoCapitalize="none" />
                         <TextInput
+                            value={this.props.pwd}
+                            onChangeText={text => this.props.changePwd(text)}
                             placeholder="Senha"
                             style={styles.input}
                             underlineColorAndroid="transparent"
@@ -26,16 +32,16 @@ export default class FormLogin extends Component {
                             autoCapitalize="none"
                             secureTextEntry
                         />
-                        <View style={styles.registerText}>
-                            <Text style={styles.registerLink} >Ainda não tem acesso? </Text>
-                            <TouchableOpacity onPress={() => Actions.register()}>
-                                <Text style={[styles.registerLink, { color: '#25D366' }]} >Cadastre-se</Text>
-                            </TouchableOpacity>
-                        </View>
                     </View>
                     <View style={styles.button}>
                         <TouchableOpacity style={styles.touchable}>
                             <Text style={styles.touchableText} >Acessar</Text>
+                        </TouchableOpacity>
+                    </View>
+                    <View style={styles.registerText}>
+                        <Text style={styles.registerLink} >Ainda não tem acesso? </Text>
+                        <TouchableOpacity onPress={() => NavigationService.navigate('Register')}>
+                            <Text style={[styles.registerLink, { color: '#25D366' }]} >Cadastre-se</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -51,18 +57,19 @@ const styles = StyleSheet.create({
     },
 
     title: {
-        flex: 3,
+        flex: 2,
         justifyContent: 'center',
         alignItems: 'center',
     },
 
 
     form: {
-        flex: 2,
+        flex: 1,
     },
 
     button: {
         flex: 1,
+        overflow: "hidden",
         justifyContent: 'center',
         alignItems: 'center',
     },
@@ -80,6 +87,7 @@ const styles = StyleSheet.create({
         borderColor: '#ECE5DD',
         borderWidth: 1,
         borderRadius: 8,
+
         margin: 10
     },
 
@@ -107,3 +115,12 @@ const styles = StyleSheet.create({
         fontSize: 20,
     }
 })
+
+const mapStateToProps = state => (
+    {
+        email: state.AuthReducer.email,
+        pwd: state.AuthReducer.pwd
+    }
+)
+
+export default connect(mapStateToProps, { changeEmail, changePwd })(FormLogin)

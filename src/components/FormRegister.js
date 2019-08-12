@@ -1,9 +1,33 @@
 import React, { Component } from 'react'
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, ImageBackground, Image } from 'react-native'
-import { Actions } from 'react-native-router-flux'
+import {
+    View,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    StyleSheet,
+    ImageBackground,
+    Image,
+    Vibration,
+    Button
+} from 'react-native'
+import { connect } from 'react-redux'
+
+import {
+    changeEmail,
+    changePwd,
+    changeName,
+    createUser
+} from '../actions/AuthActions'
+import NavigationService from 'whatsappclone/src/services/NavigationService';
 
 
-export default class FormRegister extends Component {
+class FormRegister extends Component {
+
+    _createUser() {
+        const { name, email, pwd } = this.props
+        this.props.createUser({ name, email, pwd })
+    }
+
     render() {
         return (
             <ImageBackground source={require('../images/wpp_background.jpg')} style={{ width: '100%', height: '100%' }} >
@@ -14,16 +38,22 @@ export default class FormRegister extends Component {
                     </View>
                     <View style={styles.form}>
                         <TextInput
+                            value={this.props.name}
+                            onChangeText={text => this.props.changeName(text)}
                             placeholder="Nome"
                             style={styles.input}
                             placeholderTextColor='#C3C3C3'
                             autoCapitalize="none" />
                         <TextInput
+                            value={this.props.email}
+                            onChangeText={text => this.props.changeEmail(text)}
                             placeholder="E-mail"
                             style={styles.input}
                             placeholderTextColor='#C3C3C3'
                             autoCapitalize="none" />
                         <TextInput
+                            value={this.props.pwd}
+                            onChangeText={text => this.props.changePwd(text)}
                             placeholder="Senha"
                             style={styles.input}
                             underlineColorAndroid="transparent"
@@ -31,16 +61,20 @@ export default class FormRegister extends Component {
                             autoCapitalize="none"
                             secureTextEntry
                         />
+
                         <View style={styles.registerText}>
-                            <Text style={styles.registerLink} >Já possui uma conta? </Text>
-                            <TouchableOpacity onPress={() => Actions.login()}>
-                                <Text style={[styles.registerLink, { color: '#25D366' }]} >Acesse aqui</Text>
-                            </TouchableOpacity>
+                            <Text style={styles.errorText}>{this.props.registerError}</Text>
                         </View>
                     </View>
                     <View style={styles.button}>
-                        <TouchableOpacity style={styles.touchable}>
+                        <TouchableOpacity style={styles.touchable} onPress={() => this._createUser()}>
                             <Text style={styles.touchableText} >Cadastrar</Text>
+                        </TouchableOpacity>
+                    </View>
+                    <View style={styles.registerText}>
+                        <Text style={styles.registerLink} >Já possui uma conta? </Text>
+                        <TouchableOpacity onPress={() => NavigationService.navigate('Login')}>
+                            <Text style={[styles.registerLink, { color: '#25D366' }]} >Acesse aqui</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -87,7 +121,6 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         margin: 10
     },
-
     registerLink: {
         color: '#ECE5DD',
         fontSize: 20
@@ -111,5 +144,29 @@ const styles = StyleSheet.create({
     touchableText: {
         color: '#ECE5DD',
         fontSize: 20,
+    },
+
+    errorText: {
+        color: '#ff0000',
+        fontSize: 16
     }
 })
+
+const mapStateToProps = state => (
+    {
+        name: state.AuthReducer.name,
+        email: state.AuthReducer.email,
+        pwd: state.AuthReducer.pwd,
+        registerError: state.AuthReducer.registerError
+    }
+)
+
+export default connect(
+    mapStateToProps,
+    {
+        changeEmail,
+        changePwd,
+        changeName,
+        createUser
+    }
+)(FormRegister)
